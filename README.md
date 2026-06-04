@@ -1,57 +1,27 @@
 # KanDone
 
-A personal Kanban board web app for managing projects and tasks without the hassle.
+**Manage your projects without the hassle.**
 
-## Features
+KanDone is a clean, fast Kanban board built for people who want to stay on top of their work without the complexity of bloated project management tools. No steep learning curve, no unnecessary features — just a focused space to organize what needs to get done.
 
-- **Google Authentication** — sign in securely with your Google account
-- **Project Management** — create and manage multiple projects
-- **Kanban Board** — organize tasks across To Do, Working On, Done, and Stuck columns
-- **Drag & Drop** — reorder and move tasks between columns with precision
-- **Real-time Sync** — changes reflect instantly across devices
-- **Analytics** — pie chart and bar chart showing task distribution per project
-- **Persistent Storage** — all data saved to the cloud via Supabase
+## What you can do
 
-## Tech Stack
+- **Create projects** and switch between them instantly from the sidebar
+- **Add tasks** to any column and move them as your work progresses
+- **Drag and drop** tasks between columns and reorder them with precision
+- **Track progress** at a glance with live charts showing how your tasks are distributed
+- **Access from anywhere** — your data syncs in real time across all your devices
+- **Log in securely** with your Google account — no passwords to remember
 
-- **Frontend** — React 19, TypeScript, Vite
-- **Styling** — Tailwind CSS
-- **Drag & Drop** — @dnd-kit
-- **Charts** — Recharts
-- **Backend & Auth** — Supabase (PostgreSQL + Google OAuth)
-- **Deployment** — Vercel
+## Columns
 
-## Getting Started
+| Column | Purpose |
+|--------|---------|
+| **To Do** | Everything that needs to be started |
+| **Working On** | What you're actively doing right now |
+| **Done** | Completed tasks |
+| **Stuck** | Blocked tasks that need attention |
 
-### Prerequisites
-
-- Node.js
-- A [Supabase](https://supabase.com) project with Google OAuth enabled
-
-### Setup
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/KevinAlushi/kandone.git
-   cd kandone
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Create a `.env` file in the root directory:
-   ```
-   VITE_SUPABASE_URL=your_supabase_project_url
-   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-   ```
-
-4. Run the app locally:
-   ```bash
-   npm run dev
-   ```
-
-## Live Demo
+## Try it
 
 [kandone.vercel.app](https://kandone.vercel.app)
