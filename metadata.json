@@ -1,0 +1,6 @@
+{
+  "name": "Solo Kanban",
+  "description": "A personal Kanban board for managing multiple projects with drag-and-drop and dark mode support.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

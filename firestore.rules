@@ -1,0 +1,66 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() { return request.auth != null; }
+    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+
+    function isValidProject(data) {
+      return data.keys().hasAll(['name', 'createdAt', 'updatedAt', 'ownerId']) &&
+             data.keys().size() == 4 &&
+             data.name is string && data.name.size() > 0 && data.name.size() <= 100 &&
+             data.createdAt is number &&
+             data.updatedAt is number &&
+             data.ownerId is string && data.ownerId == request.auth.uid;
+    }
+
+    match /projects/{projectId} {
+      allow read: if isSignedIn() && existing().ownerId == request.auth.uid;
+      allow create: if isSignedIn() && isValidId(projectId) && isValidProject(incoming());
+      allow update: if isSignedIn() && isValidId(projectId) && isValidProject(incoming()) &&
+                    incoming().ownerId == existing().ownerId &&
+                    incoming().createdAt == existing().createdAt &&
+                    incoming().diff(existing()).affectedKeys().hasOnly(['name', 'updatedAt']);
+      allow delete: if isSignedIn() && isValidId(projectId) && existing().ownerId == request.auth.uid;
+    }
+
+    function isValidTask(data) {
+      return data.keys().hasAll(['status', 'title', 'createdAt', 'updatedAt', 'projectId', 'ownerId']) &&
+             data.keys().size() >= 6 && data.keys().size() <= 8 &&
+             data.status is string && (data.status == 'todo' || data.status == 'working' || data.status == 'done' || data.status == 'stuck') &&
+             data.title is string && data.title.size() <= 1000 &&
+             data.createdAt is number &&
+             data.updatedAt is number &&
+             data.projectId is string &&
+             data.ownerId is string && data.ownerId == request.auth.uid &&
+             (!('description' in data) || (data.description is string && data.description.size() <= 2000)) &&
+             (!('order' in data) || (data.order is number));
+    }
+    
+    function canAccessProject(pid) {
+      return get(/databases/$(database)/documents/projects/$(pid)).data.ownerId == request.auth.uid;
+    }
+
+    match /tasks/{taskId} {
+      allow read: if isSignedIn() && resource.data.ownerId == request.auth.uid;
+      
+      allow create: if isSignedIn() && isValidId(taskId) && isValidTask(incoming()) &&
+                    exists(/databases/$(database)/documents/projects/$(incoming().projectId)) &&
+                    canAccessProject(incoming().projectId);
+                    
+      allow update: if isSignedIn() && isValidId(taskId) && isValidTask(incoming()) &&
+                    incoming().projectId == existing().projectId &&
+                    incoming().ownerId == existing().ownerId &&
+                    incoming().createdAt == existing().createdAt &&
+                    existing().ownerId == request.auth.uid &&
+                    (incoming().diff(existing()).affectedKeys().hasOnly(['status', 'title', 'description', 'updatedAt', 'order']));
+                    
+      allow delete: if isSignedIn() && isValidId(taskId) && existing().ownerId == request.auth.uid;
+    }
+  }
+}
