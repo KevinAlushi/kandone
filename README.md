@@ -1,5 +1,7 @@
 # KanDone
 
+![KanDone App Screenshot](/public/screenshot.png)
+
 **Manage your projects without the hassle.**
 
 KanDone is a clean, fast Kanban board built for people who want to stay on top of their work without the complexity of bloated project management tools. No steep learning curve, no unnecessary features — just a focused space to organize what needs to get done.
