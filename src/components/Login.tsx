@@ -20,9 +20,7 @@ export function Login() {
   return (
     <div className="flex flex-col items-center justify-center h-screen w-full bg-[#050505] text-slate-200">
       <div className="flex flex-col items-center gap-6 p-10 rounded-3xl border border-white/5 border-b-[6px] border-b-black/50 bg-[#1A1A1A] shadow-[0_20px_40px_rgba(0,0,0,0.6)]">
-        <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center">
-          <KanbanSquare size={32} className="text-white" />
-        </div>
+        <img src="/favicon.svg" className="w-16 h-16" alt="KanDone logo" />
         <div className="text-center">
           <h1 className="text-3xl text-white mb-2" style={{ fontFamily: 'Space Grotesk, sans-serif', fontWeight: 700 }}>KanDone</h1>
           <p className="text-slate-400 text-sm max-w-[250px]">Manage your projects without the hassle</p>

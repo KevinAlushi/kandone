@@ -51,9 +51,7 @@ export function Sidebar({
       <div className="w-64 flex-shrink-0 border border-white/5 border-b-[6px] border-b-black/50 rounded-2xl bg-[#1A1A1A] shadow-[0_12px_24px_rgba(0,0,0,0.4)] flex flex-col h-full overflow-hidden">
       <div className="p-8 pb-4">
         <div className="flex items-center gap-2 mb-10">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center">
-            <KanbanSquare size={18} className="text-white" />
-          </div>
+          <img src="/favicon.svg" className="w-8 h-8" alt="KanDone logo" />
           <h1 className="text-2xl text-white leading-none tracking-tight" style={{ fontFamily: 'Space Grotesk, sans-serif', fontWeight: 700 }}>KanDone</h1>
         </div>
 
