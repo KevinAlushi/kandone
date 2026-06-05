@@ -89,7 +89,7 @@ export function KanbanCard({ task, onDelete, isFlashy }: KanbanCardProps) {
     );
   }
 
-  const ringSize = (cardRect?.width ?? 220) * 1.6;
+  const ringSize = (cardRect?.width ?? 220) * 1.15;
 
   return (
     <>
