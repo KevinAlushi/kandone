@@ -54,11 +54,6 @@ export default function App() {
       <main className="flex-1 flex flex-col gap-3 min-w-0">
         {store.activeProject ? (
           <>
-            <header className="px-8 h-20 rounded-2xl border border-white/5 border-b-[6px] border-b-black/50 bg-[#1A1A1A] shadow-[0_12px_24px_rgba(0,0,0,0.4)] flex items-center justify-center shrink-0">
-              <h2 className="text-2xl font-serif italic text-white leading-none">
-                Project Board
-              </h2>
-            </header>
             <div className="flex-1 overflow-hidden p-6 rounded-2xl border border-white/5 border-b-[6px] border-b-black/50 bg-[#1A1A1A] shadow-[0_12px_24px_rgba(0,0,0,0.4)] flex flex-col gap-6">
               <div className="flex-1 overflow-hidden min-h-0">
                 <KanbanBoard
