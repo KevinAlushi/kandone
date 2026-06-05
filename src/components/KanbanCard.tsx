@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Task } from '../types';
-import { Trash2 } from 'lucide-react';
+import { Trash2, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface KanbanCardProps {
@@ -32,6 +32,21 @@ export function KanbanCard({ task, onDelete, isFlashy }: KanbanCardProps) {
     transition,
     transform: CSS.Transform.toString(transform),
   };
+
+  const PARTICLE_COLORS = ['#34D399', '#6EE7B7', '#A7F3D0', '#FDE68A', '#86EFAC'];
+  const particleData = useMemo(() =>
+    isFlashy ? [...Array(20)].map((_, i) => ({
+      angle: (i * (360 / 20) + (Math.random() - 0.5) * 15) * (Math.PI / 180),
+      distance: 55 + Math.random() * 65,
+      size: Math.random() * 5 + 3,
+      peakScale: Math.random() * 0.7 + 0.8,
+      rotation: (Math.random() - 0.5) * 400,
+      delay: Math.random() * 0.1,
+      color: PARTICLE_COLORS[Math.floor(Math.random() * PARTICLE_COLORS.length)],
+      isCircle: Math.random() > 0.45,
+    })) : [],
+    [isFlashy] // eslint-disable-line react-hooks/exhaustive-deps
+  );
 
   if (isDragging) {
     return (
@@ -72,54 +87,65 @@ export function KanbanCard({ task, onDelete, isFlashy }: KanbanCardProps) {
           <motion.div
             className="absolute inset-0 pointer-events-none z-50 flex items-center justify-center overflow-visible"
           >
-             <motion.div 
-               initial={{ opacity: 0.8, backgroundColor: '#10B981' }}
-               animate={{ opacity: 0 }}
-               transition={{ duration: 0.6, ease: "easeOut" }}
-               className="absolute inset-0 rounded-xl"
-             />
+            {/* Flash overlay */}
+            <motion.div
+              initial={{ opacity: 0.55 }}
+              animate={{ opacity: 0 }}
+              transition={{ duration: 0.45, ease: "easeOut" }}
+              className="absolute inset-0 rounded-xl bg-emerald-500"
+            />
 
-             <motion.div 
-               initial={{ scale: 1, opacity: 1, borderWidth: '0px' }}
-               animate={{ scale: 1.05, opacity: 0, borderWidth: '6px' }}
-               transition={{ duration: 0.5, ease: "easeOut" }}
-               className="absolute inset-0 rounded-xl border-emerald-400"
-             />
-             
-             {[...Array(12)].map((_, i) => {
-                const angle = (i * 30) * (Math.PI / 180);
-                const distance = 80 + Math.random() * 40;
-                return (
-                  <motion.div
-                    key={i}
-                    initial={{ x: 0, y: 0, scale: 0, opacity: 1 }}
-                    animate={{ 
-                      x: Math.cos(angle) * distance, 
-                      y: Math.sin(angle) * distance,
-                      scale: [0, Math.random() * 1 + 0.5, 0],
-                      opacity: [1, 1, 0],
-                      rotate: Math.random() * 180
-                    }}
-                    transition={{ duration: 0.7, ease: "easeOut", delay: Math.random() * 0.1 }}
-                    className="absolute w-2 h-2 bg-emerald-400 rounded-sm shadow-[0_0_12px_rgba(52,211,153,0.8)]"
-                  />
-                );
-             })}
-             
-             <motion.div
-                initial={{ scale: 2.5, opacity: 0, rotate: -15 }}
-                animate={{ scale: 1, opacity: 1, rotate: -5 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ 
-                  duration: 0.5, 
-                  type: "spring", 
-                  damping: 10, 
-                  stiffness: 150 
+            {/* Expanding pulse rings */}
+            {[0, 1, 2].map((ring) => (
+              <motion.div
+                key={ring}
+                initial={{ scale: 0.85, opacity: 0.65 }}
+                animate={{ scale: 1.7, opacity: 0 }}
+                transition={{ duration: 0.55, ease: "easeOut", delay: ring * 0.12 }}
+                className="absolute inset-0 rounded-xl border border-emerald-400"
+              />
+            ))}
+
+            {/* Particles */}
+            {particleData.map((p, i) => (
+              <motion.div
+                key={i}
+                initial={{ x: 0, y: 0, scale: 0, opacity: 1 }}
+                animate={{
+                  x: Math.cos(p.angle) * p.distance,
+                  y: Math.sin(p.angle) * p.distance,
+                  scale: [0, p.peakScale, 0],
+                  opacity: [1, 1, 0],
+                  rotate: p.rotation,
                 }}
-                className="absolute px-3 py-1 border-4 border-emerald-400 text-emerald-400 font-black italic tracking-widest text-xl uppercase rounded-lg shadow-[0_0_20px_rgba(52,211,153,0.4)] backdrop-blur-sm bg-black/40"
-             >
-               DONE
-             </motion.div>
+                transition={{ duration: 0.65, ease: "easeOut", delay: p.delay }}
+                style={{
+                  width: p.size,
+                  height: p.size,
+                  backgroundColor: p.color,
+                  borderRadius: p.isCircle ? '50%' : '2px',
+                  boxShadow: `0 0 8px ${p.color}90`,
+                }}
+                className="absolute"
+              />
+            ))}
+
+            {/* Checkmark circle */}
+            <motion.div
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: [0, 1.25, 1], opacity: 1 }}
+              exit={{ scale: 0.7, opacity: 0 }}
+              transition={{ duration: 0.45, times: [0, 0.65, 1], ease: "easeOut" }}
+              className="absolute flex items-center justify-center w-11 h-11 rounded-full bg-emerald-500 shadow-[0_0_28px_rgba(16,185,129,0.65)]"
+            >
+              <motion.div
+                initial={{ scale: 0, rotate: -30 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ delay: 0.1, duration: 0.25, type: "spring", damping: 12, stiffness: 260 }}
+              >
+                <Check size={22} strokeWidth={3} className="text-white" />
+              </motion.div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
