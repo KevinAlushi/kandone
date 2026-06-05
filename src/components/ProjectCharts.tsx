@@ -20,12 +20,14 @@ const Bar3D = (props: any) => {
   const { x, y, width, height, fill } = props;
   if (!height || height <= 0) return null;
 
+  const borderH = 5;
+
   return (
     <g>
-      {/* Bottom border — matches app's border-b-[6px] border-b-black/50 style */}
-      <rect x={x} y={y + height} width={width} height={6} fill="rgba(0,0,0,0.5)" rx={2} ry={2} />
-      {/* Front face */}
-      <rect x={x} y={y} width={width} height={height} fill={fill} rx={4} ry={4} />
+      {/* Full-height dark rect provides the bottom border (same rx so it looks seamless) */}
+      <rect x={x} y={y} width={width} height={height} fill="rgba(0,0,0,0.55)" rx={4} ry={4} />
+      {/* Colored face sits on top, leaving the bottom borderH exposed */}
+      <rect x={x} y={y} width={width} height={Math.max(height - borderH, 0)} fill={fill} rx={4} ry={4} />
     </g>
   );
 };
